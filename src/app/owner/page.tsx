@@ -173,9 +173,14 @@ function BookingStatusControls({
   bookingId: string;
   status: string;
 }) {
-  if (status !== "PENDING") {
-    return <StatusBadge status={status} />;
+  if (status === "PENDING" || status === "CONFIRMED") {
+    return (
+      <div className="flex items-center gap-2">
+        <StatusBadge status={status} />
+        <OwnerBookingActions bookingId={bookingId} status={status} />
+      </div>
+    );
   }
 
-  return <OwnerBookingActions bookingId={bookingId} />;
+  return <StatusBadge status={status} />;
 }
