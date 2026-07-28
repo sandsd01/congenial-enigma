@@ -20,19 +20,22 @@
 ## เทคโนโลยีที่ใช้
 
 - [Next.js 16](https://nextjs.org) (App Router) + TypeScript + Tailwind CSS
-- [Prisma 7](https://www.prisma.io) ORM กับฐานข้อมูล SQLite (ผ่าน libSQL driver adapter
-  — ใช้งานได้ทั้งไฟล์ในเครื่องและ Turso/LibSQL แบบ hosted โดยไม่ต้อง compile native
-  module)
+- [Prisma 7](https://www.prisma.io) ORM กับฐานข้อมูล PostgreSQL (ผ่าน `@prisma/adapter-pg`)
 - [Auth.js (NextAuth v5)](https://authjs.dev) — ระบบล็อกอินแบบ credentials (email/password)
   พร้อม bcrypt hashing
+- อัปโหลดรูปรถเก็บเป็น `bytea` ในฐานข้อมูลโดยตรง (ไม่ต้องพึ่งบริการเก็บไฟล์ภายนอก)
+  ผ่าน `/api/cars/[id]/image`
 
 ## เริ่มต้นใช้งาน (Local Development)
+
+ต้องมี PostgreSQL รันอยู่ (เช่น `postgresql://postgres:postgres@localhost:5432/rentcar`)
+คัดลอก `.env.example` เป็น `.env` แล้วใส่ค่า `DATABASE_URL` และ `AUTH_SECRET`
 
 ```bash
 npm install
 
-# สร้างฐานข้อมูล SQLite และรัน migration (ครั้งแรกเท่านั้น)
-npx prisma migrate dev
+# รัน migration (ครั้งแรกเท่านั้น)
+npx prisma migrate deploy
 
 # ใส่ข้อมูลตัวอย่าง (ผู้ใช้ทดสอบ + รถตัวอย่าง)
 npm run seed
@@ -73,9 +76,8 @@ AUTH_SECRET="เปลี่ยนเป็นค่าสุ่มที่ป�
 โปรเจกต์นี้เป็น MVP ที่ยังไม่รวมระบบต่อไปนี้ ซึ่งควรเพิ่มก่อนเปิดใช้งานจริง:
 
 - **ระบบชำระเงินจริง** (เช่น Omise, 2C2P, Stripe) — ปัจจุบันมีเพียงฟิลด์
-  `paymentStatus` ให้แอดมินอัปเดตสถานะด้วยตนเอง
-- **การอัปโหลดรูปภาพ** — ปัจจุบันรับเฉพาะลิงก์ URL รูปภาพ
+  `paymentStatus` ให้แอดมินอัปเดตสถานะด้วยตนเอง ต้องใช้ API key จริงจากบัญชี
+  payment gateway ของเจ้าของแพลตฟอร์มจึงจะเชื่อมต่อได้
 - **การยืนยันตัวตน/ใบขับขี่** ของผู้เช่าและเอกสารรถของเจ้าของรถ
-- **ฐานข้อมูล production** เช่น PostgreSQL (Supabase/Railway) แทน SQLite ไฟล์เดียว
-  — สามารถเปลี่ยน `datasource` ใน `prisma/schema.prisma` และ driver adapter เป็น
-  `@prisma/adapter-pg` ได้
+- **CDN/object storage สำหรับรูปภาพ** หากมีรูปจำนวนมาก การเก็บใน Postgres โดยตรง
+  เหมาะกับ MVP แต่ควรย้ายไป object storage (เช่น Cloudflare R2, S3) เมื่อสเกลขึ้น

@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 enum Role {
@@ -74,6 +74,7 @@ model Car {
 
   bookings Booking[]
   reviews  Review[]
+  image    CarImage?
 
   @@index([status])
   @@index([ownerId])
@@ -124,4 +125,13 @@ model Review {
 model PlatformSetting {
   id             String @id @default("singleton")
   commissionRate Float  @default(0.15)
+}
+
+model CarImage {
+  id        String   @id @default(cuid())
+  carId     String   @unique
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  data      Bytes
+  mimeType  String
+  createdAt DateTime @default(now())
 }
