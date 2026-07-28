@@ -4,6 +4,9 @@ import { THAI_LOCATIONS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
+const inputClass =
+  "rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-faint transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
+
 type SearchParams = {
   q?: string;
   location?: string;
@@ -44,20 +47,20 @@ export default async function CarsPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold">ค้นหารถเช่า</h1>
+      <h1 className="mb-6 text-2xl font-bold text-ink">ค้นหารถเช่า</h1>
 
-      <form className="mb-8 grid grid-cols-1 gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-4">
+      <form className="mb-8 grid grid-cols-1 gap-3 rounded-xl border border-border bg-surface p-4 sm:grid-cols-4">
         <input
           type="text"
           name="q"
           placeholder="ค้นหา ยี่ห้อ / รุ่น"
           defaultValue={params.q}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={inputClass}
         />
         <select
           name="location"
           defaultValue={params.location ?? ""}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={inputClass}
         >
           <option value="">ทุกจังหวัด</option>
           {THAI_LOCATIONS.map((loc) => (
@@ -71,25 +74,25 @@ export default async function CarsPage({
           name="minPrice"
           placeholder="ราคาต่ำสุด/วัน"
           defaultValue={params.minPrice}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={inputClass}
         />
         <input
           type="number"
           name="maxPrice"
           placeholder="ราคาสูงสุด/วัน"
           defaultValue={params.maxPrice}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={inputClass}
         />
         <button
           type="submit"
-          className="col-span-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 sm:col-span-1"
+          className="col-span-full rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover sm:col-span-1"
         >
           ค้นหา
         </button>
       </form>
 
       {cars.length === 0 ? (
-        <p className="text-slate-500">ไม่พบรถที่ตรงกับเงื่อนไข</p>
+        <p className="text-ink-muted">ไม่พบรถที่ตรงกับเงื่อนไข</p>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {cars.map((car) => (

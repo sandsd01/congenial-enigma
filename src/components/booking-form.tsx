@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
+const inputClass =
+  "w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-ink transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
+
 export function BookingForm({
   carId,
   pricePerDay,
@@ -62,7 +65,7 @@ export function BookingForm({
 
   if (success) {
     return (
-      <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+      <div className="animate-fade-in-up rounded-lg border border-success/30 bg-success-bg p-4 text-sm text-success">
         ส่งคำขอจองรถสำเร็จ! เจ้าของรถจะตรวจสอบและยืนยันการจองของคุณเร็วๆ นี้
         ดูสถานะได้ที่{" "}
         <a href="/bookings" className="font-medium underline">
@@ -75,12 +78,12 @@ export function BookingForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-xl border border-slate-200 bg-white p-5"
+      className="space-y-4 rounded-xl border border-border bg-surface p-5"
     >
-      <h3 className="font-semibold">จองรถคันนี้</h3>
+      <h3 className="font-semibold text-ink">จองรถคันนี้</h3>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">
+          <label className="mb-1 block text-xs font-medium text-ink-muted">
             วันรับรถ
           </label>
           <input
@@ -89,11 +92,11 @@ export function BookingForm({
             min={new Date().toISOString().split("T")[0]}
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className={inputClass}
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">
+          <label className="mb-1 block text-xs font-medium text-ink-muted">
             วันคืนรถ
           </label>
           <input
@@ -102,39 +105,41 @@ export function BookingForm({
             min={startDate || new Date().toISOString().split("T")[0]}
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className={inputClass}
           />
         </div>
       </div>
       <div>
-        <label className="mb-1 block text-xs font-medium text-slate-600">
+        <label className="mb-1 block text-xs font-medium text-ink-muted">
           หมายเหตุถึงเจ้าของรถ (ถ้ามี)
         </label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={inputClass}
         />
       </div>
 
       {days > 0 && (
-        <div className="rounded-md bg-slate-50 p-3 text-sm">
-          <div className="flex justify-between">
+        <div className="animate-fade-in-up rounded-md border border-border bg-surface-hover p-3 text-sm">
+          <div className="flex justify-between text-ink">
             <span>
               {days} วัน × ฿{pricePerDay.toLocaleString()}
             </span>
-            <span className="font-semibold">฿{total.toLocaleString()}</span>
+            <span className="font-semibold text-accent">
+              ฿{total.toLocaleString()}
+            </span>
           </div>
         </div>
       )}
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
 
       <button
         type="submit"
         disabled={loading || days <= 0}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        className="w-full rounded-md bg-accent px-4 py-2 font-semibold text-accent-ink transition-colors hover:bg-accent-hover disabled:opacity-50"
       >
         {loading ? "กำลังส่งคำขอ..." : "ขอจองรถ"}
       </button>

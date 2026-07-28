@@ -47,7 +47,7 @@ export default async function CarDetailPage({
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <div className="aspect-video w-full overflow-hidden rounded-xl bg-slate-100">
+          <div className="aspect-video w-full overflow-hidden rounded-xl border border-border bg-surface-hover">
             {car.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -62,15 +62,15 @@ export default async function CarDetailPage({
             )}
           </div>
 
-          <h1 className="mt-6 text-2xl font-bold">{car.title}</h1>
-          <p className="text-slate-500">
+          <h1 className="mt-6 text-2xl font-bold text-ink">{car.title}</h1>
+          <p className="text-ink-muted">
             {car.brand} {car.model} · {car.year}
           </p>
           {avgRating !== null && (
-            <p className="mt-1 text-sm text-amber-500">
+            <p className="mt-1 text-sm text-accent">
               {"★".repeat(Math.round(avgRating))}
               {"☆".repeat(5 - Math.round(avgRating))}{" "}
-              <span className="text-slate-500">
+              <span className="text-ink-muted">
                 {avgRating.toFixed(1)} ({car.reviews.length} รีวิว)
               </span>
             </p>
@@ -90,38 +90,38 @@ export default async function CarDetailPage({
           </div>
 
           <div className="mt-6">
-            <h2 className="mb-2 font-semibold">รายละเอียด</h2>
-            <p className="whitespace-pre-wrap text-slate-700">
+            <h2 className="mb-2 font-semibold text-ink">รายละเอียด</h2>
+            <p className="whitespace-pre-wrap text-ink-muted">
               {car.description}
             </p>
           </div>
 
-          <div className="mt-6 rounded-lg border border-slate-200 p-4 text-sm text-slate-600">
-            ปล่อยเช่าโดย <span className="font-medium">{car.owner.name}</span>
+          <div className="mt-6 rounded-lg border border-border bg-surface p-4 text-sm text-ink-muted">
+            ปล่อยเช่าโดย <span className="font-medium text-ink">{car.owner.name}</span>
           </div>
 
           {car.reviews.length > 0 && (
             <div className="mt-6">
-              <h2 className="mb-2 font-semibold">
+              <h2 className="mb-2 font-semibold text-ink">
                 รีวิวจากผู้เช่า ({car.reviews.length})
               </h2>
               <div className="space-y-3">
                 {car.reviews.map((review) => (
                   <div
                     key={review.id}
-                    className="rounded-lg border border-slate-200 p-3 text-sm"
+                    className="rounded-lg border border-border bg-surface p-3 text-sm"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">
+                      <span className="font-medium text-ink">
                         {review.author.name}
                       </span>
-                      <span className="text-amber-400">
+                      <span className="text-accent">
                         {"★".repeat(review.rating)}
                         {"☆".repeat(5 - review.rating)}
                       </span>
                     </div>
                     {review.comment && (
-                      <p className="mt-1 text-slate-600">{review.comment}</p>
+                      <p className="mt-1 text-ink-muted">{review.comment}</p>
                     )}
                   </div>
                 ))}
@@ -131,10 +131,10 @@ export default async function CarDetailPage({
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-xl border border-slate-200 bg-white p-5">
-            <p className="text-2xl font-bold text-blue-600">
+          <div className="rounded-xl border border-border bg-surface p-5">
+            <p className="text-2xl font-bold text-accent">
               ฿{car.pricePerDay.toLocaleString()}
-              <span className="text-sm font-normal text-slate-500"> / วัน</span>
+              <span className="text-sm font-normal text-ink-muted"> / วัน</span>
             </p>
           </div>
           <BookingForm carId={car.id} pricePerDay={car.pricePerDay} />
@@ -146,9 +146,9 @@ export default async function CarDetailPage({
 
 function InfoPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-slate-50 px-3 py-2 text-sm">
-      <div className="text-xs text-slate-400">{label}</div>
-      <div className="font-medium">{value}</div>
+    <div className="rounded-lg border border-border bg-surface px-3 py-2 text-sm">
+      <div className="text-xs text-ink-faint">{label}</div>
+      <div className="font-medium text-ink">{value}</div>
     </div>
   );
 }

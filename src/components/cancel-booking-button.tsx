@@ -35,7 +35,7 @@ export function CancelBookingButton({ bookingId }: { bookingId: string }) {
     return (
       <button
         onClick={() => setConfirming(true)}
-        className="text-xs text-slate-500 underline hover:text-red-600"
+        className="text-xs text-ink-faint underline transition-colors hover:text-danger"
       >
         ยกเลิกการจอง
       </button>
@@ -44,23 +44,23 @@ export function CancelBookingButton({ bookingId }: { bookingId: string }) {
 
   return (
     <div className="flex flex-col items-end gap-1">
-      <span className="text-xs text-slate-600">ยืนยันการยกเลิก?</span>
+      <span className="text-xs text-ink-muted">ยืนยันการยกเลิก?</span>
       <div className="flex gap-2">
         <button
           disabled={loading}
           onClick={cancel}
-          className="rounded-md bg-red-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-50"
+          className="rounded-md bg-danger px-2.5 py-1 text-xs font-medium text-accent-ink transition-colors hover:opacity-90 disabled:opacity-50"
         >
           {loading ? "กำลังยกเลิก..." : "ยืนยัน"}
         </button>
         <button
           onClick={() => setConfirming(false)}
-          className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600"
+          className="rounded-md bg-surface-hover px-2.5 py-1 text-xs font-medium text-ink-muted transition-colors hover:bg-surface-raised"
         >
           ไม่ยกเลิก
         </button>
       </div>
-      {error && <span className="text-xs text-red-600">{error}</span>}
+      {error && <span className="text-xs text-danger">{error}</span>}
     </div>
   );
 }

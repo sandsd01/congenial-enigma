@@ -49,10 +49,14 @@ export default async function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold">แดชบอร์ดแอดมิน</h1>
+      <h1 className="mb-6 text-2xl font-bold text-ink">แดชบอร์ดแอดมิน</h1>
 
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <Stat label="ค่าคอมมิชชั่นสะสม" value={`฿${totalCommission.toLocaleString()}`} highlight />
+        <Stat
+          label="ค่าคอมมิชชั่นสะสม"
+          value={`฿${totalCommission.toLocaleString()}`}
+          highlight
+        />
         <Stat label="มูลค่าการจองรวม" value={`฿${totalGmv.toLocaleString()}`} />
         <Stat label="จำนวนรถทั้งหมด" value={carCount.toLocaleString()} />
         <Stat label="จำนวนผู้ใช้" value={userCount.toLocaleString()} />
@@ -62,23 +66,25 @@ export default async function AdminDashboard() {
         currentRate={setting?.commissionRate ?? DEFAULT_COMMISSION_RATE}
       />
 
-      <h2 className="mb-4 text-xl font-bold">รถรอตรวจสอบ ({pendingCars.length})</h2>
+      <h2 className="mb-4 text-xl font-bold text-ink">
+        รถรอตรวจสอบ ({pendingCars.length})
+      </h2>
       <div className="mb-10 space-y-3">
         {pendingCars.length === 0 && (
-          <p className="text-slate-500">ไม่มีรถรอตรวจสอบ</p>
+          <p className="text-ink-muted">ไม่มีรถรอตรวจสอบ</p>
         )}
         {pendingCars.map((car) => (
           <div
             key={car.id}
-            className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4"
+            className="flex items-center justify-between rounded-xl border border-border bg-surface p-4"
           >
             <div>
-              <p className="font-semibold">{car.title}</p>
-              <p className="text-sm text-slate-500">
+              <p className="font-semibold text-ink">{car.title}</p>
+              <p className="text-sm text-ink-muted">
                 {car.brand} {car.model} · {car.year} · {car.location} · ฿
                 {car.pricePerDay.toLocaleString()}/วัน
               </p>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-ink-faint">
                 เจ้าของ: {car.owner.name}
               </p>
             </div>
@@ -87,10 +93,10 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <h2 className="mb-4 text-xl font-bold">รายการจองล่าสุด</h2>
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <h2 className="mb-4 text-xl font-bold text-ink">รายการจองล่าสุด</h2>
+      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-slate-500">
+          <thead className="border-b border-border bg-surface-hover text-left text-ink-muted">
             <tr>
               <th className="px-4 py-2">รถ</th>
               <th className="px-4 py-2">ผู้เช่า</th>
@@ -102,11 +108,14 @@ export default async function AdminDashboard() {
           </thead>
           <tbody>
             {recentBookings.map((b) => (
-              <tr key={b.id} className="border-t border-slate-100">
+              <tr
+                key={b.id}
+                className="border-t border-border text-ink transition-colors hover:bg-surface-hover"
+              >
                 <td className="px-4 py-2">{b.car.title}</td>
                 <td className="px-4 py-2">{b.renter.name}</td>
                 <td className="px-4 py-2">฿{b.subtotal.toLocaleString()}</td>
-                <td className="px-4 py-2 text-blue-600">
+                <td className="px-4 py-2 text-accent">
                   ฿{b.commissionAmount.toLocaleString()}
                 </td>
                 <td className="px-4 py-2">
@@ -134,11 +143,11 @@ function Stat({
   highlight?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <p className="text-xs text-slate-500">{label}</p>
+    <div className="rounded-xl border border-border bg-surface p-4">
+      <p className="text-xs text-ink-muted">{label}</p>
       <p
         className={`mt-1 text-xl font-bold ${
-          highlight ? "text-green-600" : "text-slate-900"
+          highlight ? "text-success" : "text-ink"
         }`}
       >
         {value}

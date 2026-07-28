@@ -18,11 +18,11 @@ export default async function RootLayout({
 
   return (
     <html lang="th" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+      <body className="min-h-full flex flex-col bg-bg text-ink">
         <SessionProvider session={session}>
           <Navbar />
           <main className="flex-1">{children}</main>
-          <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
+          <footer className="border-t border-border bg-surface py-6 text-center text-sm text-ink-faint">
             © {new Date().getFullYear()} RentCar — แพลตฟอร์มตัวกลางเช่ารถ
           </footer>
         </SessionProvider>

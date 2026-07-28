@@ -42,12 +42,12 @@ export function CommissionSetting({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-8 rounded-xl border border-slate-200 bg-white p-5"
+      className="mb-8 rounded-xl border border-border bg-surface p-5"
     >
-      <label className="mb-1 block text-sm font-medium">
+      <label className="mb-1 block text-sm font-medium text-ink">
         อัตราค่าคอมมิชชั่นของแพลตฟอร์ม
       </label>
-      <p className="mb-3 text-xs text-slate-500">
+      <p className="mb-3 text-xs text-ink-muted">
         มีผลกับการจองใหม่เท่านั้น — การจองเดิมยังใช้อัตราที่บันทึกไว้ตอนจอง
       </p>
       <div className="flex items-center gap-2">
@@ -59,20 +59,18 @@ export function CommissionSetting({
           required
           value={percent}
           onChange={(e) => setPercent(e.target.value)}
-          className="w-28 rounded-md border border-slate-300 px-3 py-2"
+          className="w-28 rounded-md border border-border-strong bg-bg px-3 py-2 text-ink transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
         />
-        <span className="text-slate-500">%</span>
+        <span className="text-ink-muted">%</span>
         <button
           type="submit"
           disabled={saving}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover disabled:opacity-50"
         >
           {saving ? "กำลังบันทึก..." : "บันทึก"}
         </button>
-        {message && (
-          <span className="text-sm text-green-600">{message}</span>
-        )}
-        {error && <span className="text-sm text-red-600">{error}</span>}
+        {message && <span className="text-sm text-success">{message}</span>}
+        {error && <span className="text-sm text-danger">{error}</span>}
       </div>
     </form>
   );
