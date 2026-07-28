@@ -44,8 +44,20 @@ export function CarForm({
     ...EMPTY,
     ...initialValues,
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    initialValues?.imageUrl || null
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] ?? null;
+    setImageFile(file);
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
+  }
 
   function set<K extends keyof CarFormValues>(key: K, value: CarFormValues[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -62,14 +74,32 @@ export function CarForm({
       body: JSON.stringify(form),
     });
 
-    setLoading(false);
-
     if (!res.ok) {
+      setLoading(false);
       const data = await res.json();
       setError(data.error ?? "เกิดข้อผิดพลาด");
       return;
     }
 
+    const car = await res.json();
+    const targetCarId = carId ?? car.id;
+
+    if (imageFile) {
+      const imageForm = new FormData();
+      imageForm.append("image", imageFile);
+      const imageRes = await fetch(`/api/cars/${targetCarId}/image`, {
+        method: "POST",
+        body: imageForm,
+      });
+      if (!imageRes.ok) {
+        setLoading(false);
+        const data = await imageRes.json();
+        setError(data.error ?? "อัปโหลดรูปภาพไม่สำเร็จ");
+        return;
+      }
+    }
+
+    setLoading(false);
     router.push("/owner");
     router.refresh();
   }
@@ -187,8 +217,29 @@ export function CarForm({
       </div>
 
       <div>
+        <label className="mb-1 block text-sm font-medium">รูปภาพรถ</label>
+        {imagePreview && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imagePreview}
+            alt="ตัวอย่างรูปรถ"
+            className="mb-2 h-40 w-full rounded-md object-cover"
+          />
+        )}
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={handleImageChange}
+          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+        />
+        <p className="mt-1 text-xs text-slate-400">
+          JPEG, PNG หรือ WebP ขนาดไม่เกิน 4MB
+        </p>
+      </div>
+
+      <div>
         <label className="mb-1 block text-sm font-medium">
-          ลิงก์รูปภาพ (URL, ถ้ามี)
+          หรือลิงก์รูปภาพ (URL, ถ้าไม่ได้อัปโหลดไฟล์)
         </label>
         <input
           placeholder="https://..."
