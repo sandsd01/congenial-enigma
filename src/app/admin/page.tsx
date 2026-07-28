@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "@/components/status-badge";
 import { AdminCarActions } from "@/components/admin-car-actions";
+import { CommissionSetting } from "@/components/commission-setting";
+import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -12,25 +14,32 @@ export default async function AdminDashboard() {
     redirect("/login?callbackUrl=/admin");
   }
 
-  const [pendingCars, revenueBookings, recentBookings, carCount, userCount] =
-    await Promise.all([
-      prisma.car.findMany({
-        where: { status: "PENDING", isActive: true },
-        orderBy: { createdAt: "asc" },
-        include: { owner: { select: { name: true } } },
-      }),
-      prisma.booking.findMany({
-        where: { status: { in: ["CONFIRMED", "COMPLETED"] } },
-        select: { commissionAmount: true, subtotal: true },
-      }),
-      prisma.booking.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 15,
-        include: { car: true, renter: { select: { name: true } } },
-      }),
-      prisma.car.count({ where: { isActive: true } }),
-      prisma.user.count(),
-    ]);
+  const [
+    pendingCars,
+    revenueBookings,
+    recentBookings,
+    carCount,
+    userCount,
+    setting,
+  ] = await Promise.all([
+    prisma.car.findMany({
+      where: { status: "PENDING", isActive: true },
+      orderBy: { createdAt: "asc" },
+      include: { owner: { select: { name: true } } },
+    }),
+    prisma.booking.findMany({
+      where: { status: { in: ["CONFIRMED", "COMPLETED"] } },
+      select: { commissionAmount: true, subtotal: true },
+    }),
+    prisma.booking.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 15,
+      include: { car: true, renter: { select: { name: true } } },
+    }),
+    prisma.car.count({ where: { isActive: true } }),
+    prisma.user.count(),
+    prisma.platformSetting.findUnique({ where: { id: "singleton" } }),
+  ]);
 
   const totalCommission = revenueBookings.reduce(
     (sum, b) => sum + b.commissionAmount,
@@ -48,6 +57,10 @@ export default async function AdminDashboard() {
         <Stat label="จำนวนรถทั้งหมด" value={carCount.toLocaleString()} />
         <Stat label="จำนวนผู้ใช้" value={userCount.toLocaleString()} />
       </div>
+
+      <CommissionSetting
+        currentRate={setting?.commissionRate ?? DEFAULT_COMMISSION_RATE}
+      />
 
       <h2 className="mb-4 text-xl font-bold">รถรอตรวจสอบ ({pendingCars.length})</h2>
       <div className="mb-10 space-y-3">
