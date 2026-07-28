@@ -8,6 +8,19 @@ const adapter = new PrismaPg({
 });
 const prisma = new PrismaClient({ adapter });
 
+// This seed creates demo accounts with a well-known password. Running it
+// against a production database would hand anyone who reads this repo an
+// admin login, so refuse unless the operator explicitly overrides.
+if (process.env.NODE_ENV === "production" && !process.env.ALLOW_DEMO_SEED) {
+  console.error(
+    "Refusing to seed demo data in production.\n" +
+      "These accounts use a publicly known password and must never exist on a\n" +
+      "live site. Use `npm run create-admin` to create a real admin instead.\n" +
+      "Set ALLOW_DEMO_SEED=1 only for a throwaway environment."
+  );
+  process.exit(1);
+}
+
 async function main() {
   await prisma.platformSetting.upsert({
     where: { id: "singleton" },

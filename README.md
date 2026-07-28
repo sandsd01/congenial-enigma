@@ -58,11 +58,26 @@ npm run dev
 
 ### บัญชีทดสอบ (หลังรัน `npm run seed`)
 
+> ⚠️ **สำหรับเครื่องพัฒนาเท่านั้น** รหัสผ่านเหล่านี้เปิดเผยต่อสาธารณะใน repo นี้
+> ห้ามใช้ `npm run seed` กับฐานข้อมูล production เด็ดขาด — สคริปต์จะปฏิเสธการรัน
+> เมื่อ `NODE_ENV=production` อยู่แล้ว
+
 | บทบาท | อีเมล | รหัสผ่าน |
 |---|---|---|
 | แอดมิน | `admin@rentcar.dev` | `password123` |
 | เจ้าของรถ | `owner@rentcar.dev` | `password123` |
 | ผู้เช่า | `renter@rentcar.dev` | `password123` |
+
+### สร้างบัญชีแอดมินจริง (production)
+
+```bash
+ADMIN_EMAIL="you@example.com" \
+ADMIN_PASSWORD="<รหัสผ่านที่คาดเดายาก อย่างน้อย 12 ตัวอักษร>" \
+npm run create-admin
+```
+
+คำสั่งนี้จะสร้าง/อัปเดตบัญชีแอดมิน และ **ลบบัญชีตัวอย่างทั้งสามพร้อมข้อมูลที่ผูกอยู่**
+ออกจากฐานข้อมูลให้อัตโนมัติ
 
 ## โครงสร้างข้อมูลหลัก (`prisma/schema.prisma`)
 
@@ -92,9 +107,10 @@ AUTH_SECRET="เปลี่ยนเป็นค่าสุ่มที่ป�
 3. ตั้งค่า environment variables ของ service แอป:
    - `DATABASE_URL` = `${{Postgres.DATABASE_URL}}` (อ้างอิง service Postgres)
    - `AUTH_SECRET` = ค่าสุ่มที่สร้างเอง
-4. ตั้ง **Pre-deploy command** เป็น `npx prisma migrate deploy && npm run seed`
-   (ตัด `&& npm run seed` ออกได้ถ้าไม่ต้องการข้อมูลตัวอย่าง)
+4. ตั้ง **Pre-deploy command** เป็น `npx prisma migrate deploy`
+   (อย่าใส่ `npm run seed` — ข้อมูลตัวอย่างมีรหัสผ่านที่เปิดเผยต่อสาธารณะ)
 5. Generate domain เพื่อเปิดใช้งานสาธารณะ
+6. สร้างบัญชีแอดมินจริงด้วย `npm run create-admin` (ดูหัวข้อด้านบน)
 
 Railway จะ build ด้วย Railpack และรัน `npm run build` / `npm start` ให้อัตโนมัติ
 
