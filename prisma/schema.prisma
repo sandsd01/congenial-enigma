@@ -1,0 +1,127 @@
+// Car rental marketplace schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  RENTER
+  OWNER
+  ADMIN
+}
+
+enum CarStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  phone        String?
+  role         Role     @default(RENTER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  cars     Car[]
+  bookings Booking[] @relation("RenterBookings")
+  reviews  Review[]
+}
+
+model Car {
+  id           String    @id @default(cuid())
+  ownerId      String
+  owner        User      @relation(fields: [ownerId], references: [id])
+  title        String
+  brand        String
+  model        String
+  year         Int
+  transmission String
+  seats        Int
+  fuelType     String
+  location     String
+  pricePerDay  Float
+  description  String
+  imageUrl     String?
+  status       CarStatus @default(PENDING)
+  rejectReason String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  bookings Booking[]
+  reviews  Review[]
+
+  @@index([status])
+  @@index([ownerId])
+}
+
+model Booking {
+  id               String        @id @default(cuid())
+  carId            String
+  car              Car           @relation(fields: [carId], references: [id])
+  renterId         String
+  renter           User          @relation("RenterBookings", fields: [renterId], references: [id])
+  startDate        DateTime
+  endDate          DateTime
+  days             Int
+  pricePerDay      Float
+  subtotal         Float
+  commissionRate   Float
+  commissionAmount Float
+  ownerPayout      Float
+  status           BookingStatus @default(PENDING)
+  paymentStatus    PaymentStatus @default(UNPAID)
+  notes            String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  review Review?
+
+  @@index([carId])
+  @@index([renterId])
+  @@index([status])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  bookingId String   @unique
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id])
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@index([carId])
+}
+
+model PlatformSetting {
+  id             String @id @default("singleton")
+  commissionRate Float  @default(0.15)
+}
