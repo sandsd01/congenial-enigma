@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { THAI_LOCATIONS } from "@/lib/constants";
 
+const inputClass =
+  "w-full rounded-md border border-border-strong bg-bg px-3 py-2 text-ink transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
+const labelClass = "mb-1 block text-sm font-medium text-ink-muted";
+
 type CarFormValues = {
   title: string;
   brand: string;
@@ -107,78 +111,78 @@ export function CarForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-xl border border-slate-200 bg-white p-6"
+      className="space-y-4 rounded-xl border border-border bg-surface p-6"
     >
       <div>
-        <label className="mb-1 block text-sm font-medium">ชื่อประกาศ</label>
+        <label className={labelClass}>ชื่อประกาศ</label>
         <input
           required
           placeholder="เช่น Toyota Yaris 2022 เกียร์ออโต้ ประหยัดน้ำมัน"
           value={form.title}
           onChange={(e) => set("title", e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2"
+          className={inputClass}
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div>
-          <label className="mb-1 block text-sm font-medium">ยี่ห้อ</label>
+          <label className={labelClass}>ยี่ห้อ</label>
           <input
             required
             value={form.brand}
             onChange={(e) => set("brand", e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2"
+            className={inputClass}
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">รุ่น</label>
+          <label className={labelClass}>รุ่น</label>
           <input
             required
             value={form.model}
             onChange={(e) => set("model", e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2"
+            className={inputClass}
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">ปี</label>
+          <label className={labelClass}>ปี</label>
           <input
             type="number"
             required
             value={form.year}
             onChange={(e) => set("year", Number(e.target.value))}
-            className="w-full rounded-md border border-slate-300 px-3 py-2"
+            className={inputClass}
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">ที่นั่ง</label>
+          <label className={labelClass}>ที่นั่ง</label>
           <input
             type="number"
             required
             value={form.seats}
             onChange={(e) => set("seats", Number(e.target.value))}
-            className="w-full rounded-md border border-slate-300 px-3 py-2"
+            className={inputClass}
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <div>
-          <label className="mb-1 block text-sm font-medium">เกียร์</label>
+          <label className={labelClass}>เกียร์</label>
           <select
             value={form.transmission}
             onChange={(e) => set("transmission", e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2"
+            className={inputClass}
           >
             <option value="AUTO">ออโต้</option>
             <option value="MANUAL">ธรรมดา</option>
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">เชื้อเพลิง</label>
+          <label className={labelClass}>เชื้อเพลิง</label>
           <select
             value={form.fuelType}
             onChange={(e) => set("fuelType", e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2"
+            className={inputClass}
           >
             <option value="GASOLINE">น้ำมันเบนซิน</option>
             <option value="DIESEL">ดีเซล</option>
@@ -187,11 +191,11 @@ export function CarForm({
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">จังหวัด</label>
+          <label className={labelClass}>จังหวัด</label>
           <select
             value={form.location}
             onChange={(e) => set("location", e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2"
+            className={inputClass}
           >
             {THAI_LOCATIONS.map((loc) => (
               <option key={loc} value={loc}>
@@ -203,70 +207,68 @@ export function CarForm({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
-          ราคาเช่าต่อวัน (บาท)
-        </label>
+        <label className={labelClass}>ราคาเช่าต่อวัน (บาท)</label>
         <input
           type="number"
           required
           min={1}
           value={form.pricePerDay}
           onChange={(e) => set("pricePerDay", Number(e.target.value))}
-          className="w-full rounded-md border border-slate-300 px-3 py-2"
+          className={inputClass}
         />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">รูปภาพรถ</label>
+        <label className={labelClass}>รูปภาพรถ</label>
         {imagePreview && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={imagePreview}
             alt="ตัวอย่างรูปรถ"
-            className="mb-2 h-40 w-full rounded-md object-cover"
+            className="mb-2 h-40 w-full rounded-md border border-border object-cover"
           />
         )}
         <input
           type="file"
           accept="image/jpeg,image/png,image/webp"
           onChange={handleImageChange}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={`${inputClass} text-sm file:mr-3 file:rounded file:border-0 file:bg-surface-hover file:px-3 file:py-1.5 file:text-ink file:transition-colors hover:file:bg-surface-raised`}
         />
-        <p className="mt-1 text-xs text-slate-400">
+        <p className="mt-1 text-xs text-ink-faint">
           JPEG, PNG หรือ WebP ขนาดไม่เกิน 4MB
         </p>
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
+        <label className={labelClass}>
           หรือลิงก์รูปภาพ (URL, ถ้าไม่ได้อัปโหลดไฟล์)
         </label>
         <input
           placeholder="https://..."
           value={form.imageUrl}
           onChange={(e) => set("imageUrl", e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2"
+          className={inputClass}
         />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">รายละเอียด</label>
+        <label className={labelClass}>รายละเอียด</label>
         <textarea
           required
           rows={4}
           minLength={10}
           value={form.description}
           onChange={(e) => set("description", e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2"
+          className={inputClass}
         />
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
 
       <button
         type="submit"
         disabled={loading}
-        className="rounded-md bg-blue-600 px-5 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        className="rounded-md bg-accent px-5 py-2 font-semibold text-accent-ink transition-colors hover:bg-accent-hover disabled:opacity-50"
       >
         {loading
           ? "กำลังบันทึก..."

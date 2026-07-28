@@ -23,7 +23,7 @@ export default async function EditCarPage({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold">แก้ไขประกาศรถ</h1>
+      <h1 className="mb-6 text-2xl font-bold text-ink">แก้ไขประกาศรถ</h1>
       <CarForm carId={car.id} initialValues={{ ...car, imageUrl: car.imageUrl ?? "" }} />
     </div>
   );

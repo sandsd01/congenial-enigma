@@ -40,19 +40,19 @@ export function AdminCarActions({ carId }: { carId: string }) {
           placeholder="เหตุผลที่ปฏิเสธ"
           value={reason}
           onChange={(e) => setReason(e.target.value)}
-          className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+          className="rounded-md border border-border-strong bg-bg px-2 py-1 text-xs text-ink transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
         />
         <div className="flex gap-2">
           <button
             disabled={loading || !reason}
             onClick={reject}
-            className="rounded-md bg-red-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-50"
+            className="rounded-md bg-danger px-2.5 py-1 text-xs font-medium text-accent-ink transition-colors hover:opacity-90 disabled:opacity-50"
           >
             ยืนยันปฏิเสธ
           </button>
           <button
             onClick={() => setRejecting(false)}
-            className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600"
+            className="rounded-md bg-surface-hover px-2.5 py-1 text-xs font-medium text-ink-muted transition-colors hover:bg-surface-raised"
           >
             ยกเลิก
           </button>
@@ -66,14 +66,14 @@ export function AdminCarActions({ carId }: { carId: string }) {
       <button
         disabled={loading}
         onClick={approve}
-        className="rounded-md bg-green-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50"
+        className="rounded-md bg-success-bg px-2.5 py-1 text-xs font-medium text-success transition-colors hover:bg-success/20 disabled:opacity-50"
       >
         อนุมัติ
       </button>
       <button
         disabled={loading}
         onClick={() => setRejecting(true)}
-        className="rounded-md bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-200 disabled:opacity-50"
+        className="rounded-md bg-danger-bg px-2.5 py-1 text-xs font-medium text-danger transition-colors hover:bg-danger/20 disabled:opacity-50"
       >
         ปฏิเสธ
       </button>

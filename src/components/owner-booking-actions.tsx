@@ -32,14 +32,14 @@ export function OwnerBookingActions({
         <button
           disabled={loading}
           onClick={() => updateStatus("CONFIRMED")}
-          className="rounded-md bg-green-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50"
+          className="rounded-md bg-success-bg px-2.5 py-1 text-xs font-medium text-success transition-colors hover:bg-success/20 disabled:opacity-50"
         >
           ยืนยัน
         </button>
         <button
           disabled={loading}
           onClick={() => updateStatus("REJECTED")}
-          className="rounded-md bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-200 disabled:opacity-50"
+          className="rounded-md bg-danger-bg px-2.5 py-1 text-xs font-medium text-danger transition-colors hover:bg-danger/20 disabled:opacity-50"
         >
           ปฏิเสธ
         </button>
@@ -52,7 +52,7 @@ export function OwnerBookingActions({
       <button
         disabled={loading}
         onClick={() => updateStatus("COMPLETED")}
-        className="rounded-md bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200 disabled:opacity-50"
+        className="rounded-md bg-info-bg px-2.5 py-1 text-xs font-medium text-info transition-colors hover:bg-info/20 disabled:opacity-50"
       >
         จบการเช่าแล้ว
       </button>

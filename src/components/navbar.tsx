@@ -7,14 +7,20 @@ export function Navbar() {
   const { data: session, status } = useSession();
 
   return (
-    <header className="border-b border-slate-200 bg-white">
+    <header className="sticky top-0 z-10 border-b border-border bg-surface/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-lg font-bold text-blue-600">
+        <Link
+          href="/"
+          className="text-lg font-bold text-accent transition-colors hover:text-accent-hover"
+        >
           🚗 RentCar
         </Link>
 
         <nav className="flex items-center gap-4 text-sm">
-          <Link href="/cars" className="text-slate-600 hover:text-blue-600">
+          <Link
+            href="/cars"
+            className="text-ink-muted transition-colors hover:text-accent"
+          >
             ค้นหารถ
           </Link>
 
@@ -23,7 +29,7 @@ export function Navbar() {
               {session.user.role === "OWNER" && (
                 <Link
                   href="/owner"
-                  className="text-slate-600 hover:text-blue-600"
+                  className="text-ink-muted transition-colors hover:text-accent"
                 >
                   รถของฉัน
                 </Link>
@@ -31,7 +37,7 @@ export function Navbar() {
               {session.user.role === "RENTER" && (
                 <Link
                   href="/bookings"
-                  className="text-slate-600 hover:text-blue-600"
+                  className="text-ink-muted transition-colors hover:text-accent"
                 >
                   การจองของฉัน
                 </Link>
@@ -39,17 +45,17 @@ export function Navbar() {
               {session.user.role === "ADMIN" && (
                 <Link
                   href="/admin"
-                  className="text-slate-600 hover:text-blue-600"
+                  className="text-ink-muted transition-colors hover:text-accent"
                 >
                   แอดมิน
                 </Link>
               )}
-              <span className="hidden text-slate-400 sm:inline">
+              <span className="hidden text-ink-faint sm:inline">
                 {session.user.name}
               </span>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="rounded-md bg-slate-100 px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-200"
+                className="rounded-md bg-surface-hover px-3 py-1.5 font-medium text-ink transition-colors hover:bg-surface-raised"
               >
                 ออกจากระบบ
               </button>
@@ -58,13 +64,13 @@ export function Navbar() {
             <>
               <Link
                 href="/login"
-                className="text-slate-600 hover:text-blue-600"
+                className="text-ink-muted transition-colors hover:text-accent"
               >
                 เข้าสู่ระบบ
               </Link>
               <Link
                 href="/register"
-                className="rounded-md bg-blue-600 px-3 py-1.5 font-medium text-white hover:bg-blue-700"
+                className="rounded-md bg-accent px-3 py-1.5 font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
               >
                 สมัครสมาชิก
               </Link>
