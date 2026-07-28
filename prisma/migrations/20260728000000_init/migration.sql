@@ -94,6 +94,17 @@ CREATE TABLE "PlatformSetting" (
     CONSTRAINT "PlatformSetting_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "CarImage" (
+    "id" TEXT NOT NULL,
+    "carId" TEXT NOT NULL,
+    "data" BYTEA NOT NULL,
+    "mimeType" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "CarImage_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -118,6 +129,9 @@ CREATE UNIQUE INDEX "Review_bookingId_key" ON "Review"("bookingId");
 -- CreateIndex
 CREATE INDEX "Review_carId_idx" ON "Review"("carId");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "CarImage_carId_key" ON "CarImage"("carId");
+
 -- AddForeignKey
 ALTER TABLE "Car" ADD CONSTRAINT "Car_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -135,4 +149,7 @@ ALTER TABLE "Review" ADD CONSTRAINT "Review_carId_fkey" FOREIGN KEY ("carId") RE
 
 -- AddForeignKey
 ALTER TABLE "Review" ADD CONSTRAINT "Review_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CarImage" ADD CONSTRAINT "CarImage_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 

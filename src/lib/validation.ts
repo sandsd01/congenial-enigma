@@ -14,6 +14,12 @@ export const carSchema = z.object({
   imageUrl: z.string().url().optional().or(z.literal("")),
 });
 
+export const reviewSchema = z.object({
+  bookingId: z.string().min(1),
+  rating: z.coerce.number().int().min(1).max(5),
+  comment: z.string().max(1000).optional(),
+});
+
 export const bookingSchema = z
   .object({
     carId: z.string().min(1),

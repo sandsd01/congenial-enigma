@@ -3,18 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import type { BookingStatus, PaymentStatus } from "@/generated/prisma/enums";
 
-const OWNER_ALLOWED = new Set<BookingStatus>([
-  "CONFIRMED",
-  "REJECTED",
-  "COMPLETED",
-]);
-const RENTER_ALLOWED = new Set<BookingStatus>(["CANCELLED"]);
-const ADMIN_ALLOWED = new Set<BookingStatus>([
-  "CONFIRMED",
-  "REJECTED",
-  "CANCELLED",
-  "COMPLETED",
-]);
+type Role = "owner" | "renter" | "admin";
+
+// Maps a (fromStatus -> toStatus) transition to the roles allowed to perform it.
+const TRANSITIONS: Record<string, Role[]> = {
+  "PENDING->CONFIRMED": ["owner", "admin"],
+  "PENDING->REJECTED": ["owner", "admin"],
+  "PENDING->CANCELLED": ["renter", "admin"],
+  "CONFIRMED->COMPLETED": ["owner", "admin"],
+  "CONFIRMED->CANCELLED": ["renter", "owner", "admin"],
+};
 
 export async function PATCH(
   req: Request,
@@ -53,24 +51,24 @@ export async function PATCH(
   const data: { status?: BookingStatus; paymentStatus?: PaymentStatus } = {};
 
   if (status) {
-    const allowed = isAdmin
-      ? ADMIN_ALLOWED
-      : isOwner
-        ? OWNER_ALLOWED
-        : RENTER_ALLOWED;
+    const allowedRoles = TRANSITIONS[`${booking.status}->${status}`];
 
-    if (!allowed.has(status)) {
+    if (!allowedRoles) {
       return NextResponse.json(
         { error: "ไม่สามารถเปลี่ยนสถานะนี้ได้" },
-        { status: 403 }
-      );
-    }
-    if (booking.status !== "PENDING" && status !== "CANCELLED") {
-      return NextResponse.json(
-        { error: "รายการจองนี้ถูกดำเนินการแล้ว" },
         { status: 409 }
       );
     }
+
+    const hasRole =
+      (isAdmin && allowedRoles.includes("admin")) ||
+      (isOwner && allowedRoles.includes("owner")) ||
+      (isRenter && allowedRoles.includes("renter"));
+
+    if (!hasRole) {
+      return NextResponse.json({ error: "ไม่มีสิทธิ์เข้าถึง" }, { status: 403 });
+    }
+
     data.status = status;
   }
 

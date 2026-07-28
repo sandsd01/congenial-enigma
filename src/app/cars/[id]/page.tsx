@@ -25,12 +25,23 @@ export default async function CarDetailPage({
 
   const car = await prisma.car.findUnique({
     where: { id },
-    include: { owner: { select: { name: true } } },
+    include: {
+      owner: { select: { name: true } },
+      reviews: {
+        orderBy: { createdAt: "desc" },
+        include: { author: { select: { name: true } } },
+      },
+    },
   });
 
   if (!car || car.status !== "APPROVED" || !car.isActive) {
     notFound();
   }
+
+  const avgRating =
+    car.reviews.length > 0
+      ? car.reviews.reduce((sum, r) => sum + r.rating, 0) / car.reviews.length
+      : null;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -55,6 +66,15 @@ export default async function CarDetailPage({
           <p className="text-slate-500">
             {car.brand} {car.model} · {car.year}
           </p>
+          {avgRating !== null && (
+            <p className="mt-1 text-sm text-amber-500">
+              {"★".repeat(Math.round(avgRating))}
+              {"☆".repeat(5 - Math.round(avgRating))}{" "}
+              <span className="text-slate-500">
+                {avgRating.toFixed(1)} ({car.reviews.length} รีวิว)
+              </span>
+            </p>
+          )}
 
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <InfoPill label="ที่ตั้ง" value={car.location} />
@@ -79,6 +99,35 @@ export default async function CarDetailPage({
           <div className="mt-6 rounded-lg border border-slate-200 p-4 text-sm text-slate-600">
             ปล่อยเช่าโดย <span className="font-medium">{car.owner.name}</span>
           </div>
+
+          {car.reviews.length > 0 && (
+            <div className="mt-6">
+              <h2 className="mb-2 font-semibold">
+                รีวิวจากผู้เช่า ({car.reviews.length})
+              </h2>
+              <div className="space-y-3">
+                {car.reviews.map((review) => (
+                  <div
+                    key={review.id}
+                    className="rounded-lg border border-slate-200 p-3 text-sm"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">
+                        {review.author.name}
+                      </span>
+                      <span className="text-amber-400">
+                        {"★".repeat(review.rating)}
+                        {"☆".repeat(5 - review.rating)}
+                      </span>
+                    </div>
+                    {review.comment && (
+                      <p className="mt-1 text-slate-600">{review.comment}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">
