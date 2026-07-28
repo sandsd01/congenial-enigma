@@ -16,6 +16,16 @@
   มูลค่าการจองรวม (GMV), และรายการจองทั้งหมด
 - **คำนวณค่าคอมมิชชั่นอัตโนมัติ**: ทุกการจองจะคำนวณยอดรวม, ค่าคอมมิชชั่นของแพลตฟอร์ม
   (ค่าเริ่มต้น 15%, ปรับได้ผ่านตาราง `PlatformSetting`), และยอดที่เจ้าของรถจะได้รับ
+- **รีวิว**: ผู้เช่าให้คะแนนดาวและเขียนรีวิวได้หลังจบการเช่า แสดงคะแนนเฉลี่ยบนหน้ารถ
+
+## วงจรสถานะการจอง (Booking lifecycle)
+
+```
+PENDING ──(เจ้าของ/แอดมิน ยืนยัน)──> CONFIRMED ──(เจ้าของ/แอดมิน)──> COMPLETED ──> รีวิวได้
+   │                                     │
+   ├──(เจ้าของ/แอดมิน ปฏิเสธ)──> REJECTED  └──(ผู้เช่า/เจ้าของ/แอดมิน)──> CANCELLED
+   └──(ผู้เช่า/แอดมิน ยกเลิก)──> CANCELLED
+```
 
 ## เทคโนโลยีที่ใช้
 
@@ -60,16 +70,33 @@ npm run dev
 - `Car` — ประกาศรถ พร้อมสถานะการอนุมัติ (PENDING / APPROVED / REJECTED / SUSPENDED)
 - `Booking` — การจอง เก็บยอดรวม, อัตราค่าคอมมิชชั่น ณ ขณะจอง, ค่าคอมมิชชั่น,
   และยอดที่เจ้าของรถได้รับ พร้อมสถานะการจองและการชำระเงิน
+- `Review` — รีวิวของผู้เช่า (1 รีวิวต่อ 1 การจองที่จบแล้ว)
+- `CarImage` — ไฟล์รูปรถที่อัปโหลด เก็บเป็น `bytea`
 - `PlatformSetting` — ตั้งค่าอัตราค่าคอมมิชชั่นของแพลตฟอร์ม (ค่าเริ่มต้น 15%)
 
 ## Environment Variables (`.env`)
 
 ```
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://user:password@host:5432/dbname"
 AUTH_SECRET="เปลี่ยนเป็นค่าสุ่มที่ปลอดภัยก่อน deploy จริง"
 ```
 
 สร้างค่า `AUTH_SECRET` ใหม่ด้วยคำสั่ง `npx auth secret` หรือ `openssl rand -base64 32`
+
+## Deploy (Railway)
+
+โปรเจกต์นี้ deploy บน [Railway](https://railway.com) ได้โดยตรงจาก GitHub:
+
+1. สร้าง project ใหม่ แล้วเพิ่ม **PostgreSQL** service
+2. เพิ่ม service จาก GitHub repo นี้ (branch `main`)
+3. ตั้งค่า environment variables ของ service แอป:
+   - `DATABASE_URL` = `${{Postgres.DATABASE_URL}}` (อ้างอิง service Postgres)
+   - `AUTH_SECRET` = ค่าสุ่มที่สร้างเอง
+4. ตั้ง **Pre-deploy command** เป็น `npx prisma migrate deploy && npm run seed`
+   (ตัด `&& npm run seed` ออกได้ถ้าไม่ต้องการข้อมูลตัวอย่าง)
+5. Generate domain เพื่อเปิดใช้งานสาธารณะ
+
+Railway จะ build ด้วย Railpack และรัน `npm run build` / `npm start` ให้อัตโนมัติ
 
 ## หมายเหตุสำหรับการใช้งานจริง (Production)
 
