@@ -1,0 +1,66 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export function CancelBookingButton({ bookingId }: { bookingId: string }) {
+  const router = useRouter();
+  const [confirming, setConfirming] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function cancel() {
+    setError("");
+    setLoading(true);
+
+    const res = await fetch(`/api/bookings/${bookingId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "CANCELLED" }),
+    });
+
+    setLoading(false);
+
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error ?? "ยกเลิกไม่สำเร็จ");
+      return;
+    }
+
+    setConfirming(false);
+    router.refresh();
+  }
+
+  if (!confirming) {
+    return (
+      <button
+        onClick={() => setConfirming(true)}
+        className="text-xs text-slate-500 underline hover:text-red-600"
+      >
+        ยกเลิกการจอง
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <span className="text-xs text-slate-600">ยืนยันการยกเลิก?</span>
+      <div className="flex gap-2">
+        <button
+          disabled={loading}
+          onClick={cancel}
+          className="rounded-md bg-red-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-50"
+        >
+          {loading ? "กำลังยกเลิก..." : "ยืนยัน"}
+        </button>
+        <button
+          onClick={() => setConfirming(false)}
+          className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600"
+        >
+          ไม่ยกเลิก
+        </button>
+      </div>
+      {error && <span className="text-xs text-red-600">{error}</span>}
+    </div>
+  );
+}

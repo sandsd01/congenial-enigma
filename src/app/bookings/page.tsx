@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "@/components/status-badge";
 import { ReviewForm } from "@/components/review-form";
+import { CancelBookingButton } from "@/components/cancel-booking-button";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +55,12 @@ export default async function MyBookingsPage() {
                     ฿{b.subtotal.toLocaleString()}
                   </p>
                 </div>
-                <StatusBadge status={b.status} />
+                <div className="flex flex-col items-end gap-1.5">
+                  <StatusBadge status={b.status} />
+                  {(b.status === "PENDING" || b.status === "CONFIRMED") && (
+                    <CancelBookingButton bookingId={b.id} />
+                  )}
+                </div>
               </div>
 
               {b.status === "COMPLETED" &&
