@@ -18,10 +18,13 @@ const FUEL_LABEL: Record<string, string> = {
 
 export default async function CarDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ startDate?: string; endDate?: string }>;
 }) {
   const { id } = await params;
+  const { startDate, endDate } = await searchParams;
 
   const car = await prisma.car.findUnique({
     where: { id },
@@ -137,7 +140,12 @@ export default async function CarDetailPage({
               <span className="text-sm font-normal text-ink-muted"> / วัน</span>
             </p>
           </div>
-          <BookingForm carId={car.id} pricePerDay={car.pricePerDay} />
+          <BookingForm
+            carId={car.id}
+            pricePerDay={car.pricePerDay}
+            initialStartDate={startDate}
+            initialEndDate={endDate}
+          />
         </div>
       </div>
     </div>
