@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import { LogoMark } from "@/components/logo-mark";
 
 function NavLinks({
   session,
@@ -56,9 +57,10 @@ export function Navbar() {
         <Link
           href="/"
           onClick={closeMenu}
-          className="text-lg font-bold text-accent transition-colors hover:text-accent-hover"
+          className="flex items-center gap-2 text-lg font-bold text-accent transition-opacity hover:opacity-80"
         >
-          🚗 RentCar
+          <LogoMark className="h-7 w-7" />
+          RentCar
         </Link>
 
         {/* Desktop nav */}
