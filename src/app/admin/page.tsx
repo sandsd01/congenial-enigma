@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "@/components/status-badge";
 import { AdminCarActions } from "@/components/admin-car-actions";
 import { AdminVerificationActions } from "@/components/admin-verification-actions";
+import { AdminPaymentAction } from "@/components/admin-payment-action";
 import { CommissionSetting } from "@/components/commission-setting";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 
@@ -56,7 +58,25 @@ export default async function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="mb-6 font-display text-2xl font-normal text-ink">แดชบอร์ดแอดมิน</h1>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-2xl font-normal text-ink">
+          แดชบอร์ดแอดมิน
+        </h1>
+        <div className="flex gap-4 text-sm">
+          <Link
+            href="/admin/users"
+            className="text-ink-muted transition-colors hover:text-accent"
+          >
+            ผู้ใช้ทั้งหมด →
+          </Link>
+          <Link
+            href="/admin/cars"
+            className="text-ink-muted transition-colors hover:text-accent"
+          >
+            รถทั้งหมด →
+          </Link>
+        </div>
+      </div>
 
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Stat
@@ -155,7 +175,13 @@ export default async function AdminDashboard() {
                   <StatusBadge status={b.status} />
                 </td>
                 <td className="px-4 py-2">
-                  <StatusBadge status={b.paymentStatus} />
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status={b.paymentStatus} />
+                    <AdminPaymentAction
+                      bookingId={b.id}
+                      paymentStatus={b.paymentStatus}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
