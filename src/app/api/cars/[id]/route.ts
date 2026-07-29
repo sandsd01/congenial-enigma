@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { carSchema } from "@/lib/validation";
+import { carSchema, carModerationSchema } from "@/lib/validation";
+import { safeJson } from "@/lib/parse-json";
 
 export async function GET(
   _req: Request,
@@ -43,15 +44,26 @@ export async function PATCH(
     return NextResponse.json({ error: "ไม่มีสิทธิ์เข้าถึง" }, { status: 403 });
   }
 
-  const body = await req.json();
+  const body = await safeJson(req);
+  if (body === undefined || typeof body !== "object" || body === null) {
+    return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400 });
+  }
 
   // Admin-only moderation actions
   if (isAdmin && "status" in body) {
+    const parsedModeration = carModerationSchema.safeParse(body);
+    if (!parsedModeration.success) {
+      return NextResponse.json(
+        { error: parsedModeration.error.issues[0]?.message ?? "ข้อมูลไม่ถูกต้อง" },
+        { status: 400 }
+      );
+    }
+
     const updated = await prisma.car.update({
       where: { id },
       data: {
-        status: body.status,
-        rejectReason: body.rejectReason ?? null,
+        status: parsedModeration.data.status,
+        rejectReason: parsedModeration.data.rejectReason ?? null,
       },
     });
     return NextResponse.json(updated);

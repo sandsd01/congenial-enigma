@@ -11,7 +11,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "ไม่มีสิทธิ์เข้าถึง" }, { status: 401 });
   }
 
-  const formData = await req.formData();
+  let formData: FormData;
+  try {
+    formData = await req.formData();
+  } catch {
+    return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400 });
+  }
   const file = formData.get("document");
 
   if (!(file instanceof File)) {
@@ -23,6 +28,10 @@ export async function POST(req: Request) {
       { error: "รองรับเฉพาะไฟล์ JPEG, PNG หรือ WebP" },
       { status: 400 }
     );
+  }
+
+  if (file.size === 0) {
+    return NextResponse.json({ error: "ไฟล์เอกสารว่างเปล่า" }, { status: 400 });
   }
 
   if (file.size > MAX_SIZE_BYTES) {

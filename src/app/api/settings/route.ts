@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
+import { safeJson } from "@/lib/parse-json";
 
 const settingSchema = z.object({
   // Stored as a fraction (0.15 = 15%)
@@ -15,10 +16,10 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "ไม่มีสิทธิ์เข้าถึง" }, { status: 403 });
   }
 
-  const body = await req.json();
-  const parsed = settingSchema.safeParse(body);
+  const body = await safeJson(req);
+  const parsed = body === undefined ? undefined : settingSchema.safeParse(body);
 
-  if (!parsed.success) {
+  if (!parsed?.success) {
     return NextResponse.json(
       { error: "อัตราค่าคอมมิชชั่นต้องอยู่ระหว่าง 0% ถึง 50%" },
       { status: 400 }

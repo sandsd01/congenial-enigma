@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { reviewSchema } from "@/lib/validation";
+import { safeJson } from "@/lib/parse-json";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -9,7 +10,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
   }
 
-  const body = await req.json();
+  const body = await safeJson(req);
+  if (body === undefined) {
+    return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400 });
+  }
   const parsed = reviewSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { bookingSchema } from "@/lib/validation";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
+import { safeJson } from "@/lib/parse-json";
 
 export async function GET() {
   const session = await auth();
@@ -25,7 +26,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
   }
 
-  const body = await req.json();
+  const body = await safeJson(req);
+  if (body === undefined) {
+    return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400 });
+  }
   const parsed = bookingSchema.safeParse(body);
 
   if (!parsed.success) {
