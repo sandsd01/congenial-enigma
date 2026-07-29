@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const inputClass =
@@ -51,6 +51,10 @@ export default function AccountPage() {
     setNewPassword("");
     setConfirmPassword("");
     setSuccess(true);
+
+    setTimeout(() => {
+      signOut({ callbackUrl: "/login" });
+    }, 1500);
   }
 
   return (
@@ -103,7 +107,9 @@ export default function AccountPage() {
           </div>
           {error && <p className="text-sm text-danger">{error}</p>}
           {success && (
-            <p className="text-sm text-success">เปลี่ยนรหัสผ่านสำเร็จ</p>
+            <p className="text-sm text-success">
+              เปลี่ยนรหัสผ่านสำเร็จ กำลังออกจากระบบเพื่อเข้าสู่ระบบใหม่...
+            </p>
           )}
           <button
             type="submit"
