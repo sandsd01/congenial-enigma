@@ -43,7 +43,7 @@ function LoginForm() {
   return (
     <div className="mx-auto max-w-sm px-4 py-16">
       <div className="animate-fade-in-up rounded-xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
-        <h1 className="mb-6 text-2xl font-bold text-ink">เข้าสู่ระบบ</h1>
+        <h1 className="mb-6 font-display text-2xl font-normal text-ink">เข้าสู่ระบบ</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="mb-1 block text-sm font-medium text-ink-muted">

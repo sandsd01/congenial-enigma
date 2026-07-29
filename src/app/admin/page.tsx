@@ -56,7 +56,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-ink">แดชบอร์ดแอดมิน</h1>
+      <h1 className="mb-6 font-display text-2xl font-normal text-ink">แดชบอร์ดแอดมิน</h1>
 
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Stat
@@ -73,7 +73,7 @@ export default async function AdminDashboard() {
         currentRate={setting?.commissionRate ?? DEFAULT_COMMISSION_RATE}
       />
 
-      <h2 className="mb-4 text-xl font-bold text-ink">
+      <h2 className="mb-4 font-display text-xl font-normal text-ink">
         รถรอตรวจสอบ ({pendingCars.length})
       </h2>
       <div className="mb-10 space-y-3">
@@ -100,7 +100,7 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <h2 className="mb-4 text-xl font-bold text-ink">
+      <h2 className="mb-4 font-display text-xl font-normal text-ink">
         คำขอยืนยันตัวตนรอตรวจสอบ ({pendingVerifications.length})
       </h2>
       <div className="mb-10 space-y-3">
@@ -121,7 +121,7 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <h2 className="mb-4 text-xl font-bold text-ink">รายการจองล่าสุด</h2>
+      <h2 className="mb-4 font-display text-xl font-normal text-ink">รายการจองล่าสุด</h2>
       <div className="overflow-x-auto rounded-xl border border-border bg-surface">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-border bg-surface-hover text-left text-ink-muted">

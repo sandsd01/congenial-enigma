@@ -1,25 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  /* Premium dark palette — deep charcoal surfaces with a warm gold accent. */
-  --bg: #05070a;
-  --surface: #10141b;
-  --surface-hover: #171d27;
-  --surface-raised: #1a212c;
-  --border: #232b38;
-  --border-strong: #313b4b;
-  --ink: #e8ebf1;
-  --ink-muted: #97a1b3;
-  --ink-faint: #6b7484;
+  /* Warm ink palette — not cool near-black, gold as primary accent, a muted
+     rust as a second voice so the page isn't "one color on black." */
+  --bg: #0b0908;
+  --surface: #17130f;
+  --surface-hover: #1f1912;
+  --surface-raised: #251e15;
+  --border: #2f2620;
+  --border-strong: #4a3d2e;
+  --ink: #f2ede3;
+  --ink-muted: #ac9f8b;
+  --ink-faint: #7c7161;
   --accent: #eab308;
   --accent-hover: #facc15;
   --accent-ink: #1a1200;
-  --danger: #f87171;
-  --danger-bg: #2a1416;
+  --rust: #c2571f;
+  --rust-hover: #d9691f;
+  --paper: #f0e6d2;
+  --danger: #f0806a;
+  --danger-bg: #2a1512;
   --success: #34d399;
   --success-bg: #0f2620;
-  --info: #60a5fa;
-  --info-bg: #101d31;
+  --info: #7cabf5;
+  --info-bg: #131c2e;
 }
 
 @theme inline {
@@ -35,20 +39,44 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-ink: var(--accent-ink);
+  --color-rust: var(--rust);
+  --color-rust-hover: var(--rust-hover);
+  --color-paper: var(--paper);
   --color-danger: var(--danger);
   --color-danger-bg: var(--danger-bg);
   --color-success: var(--success);
   --color-success-bg: var(--success-bg);
   --color-info: var(--info);
   --color-info-bg: var(--info-bg);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body), "Noto Sans Thai", sans-serif;
+  --font-display: var(--font-display), "Noto Serif Thai", serif;
 }
 
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* A faint film-grain texture over the void — the one detail generic dark
+   templates never bother to add. Deliberately subtle: felt, not seen. */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
 }
 
 /* Native date/select controls default to a light picker; force dark so the
