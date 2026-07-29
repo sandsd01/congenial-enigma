@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { bookingStatusUpdateSchema } from "@/lib/validation";
+import { safeJson } from "@/lib/parse-json";
 import type { BookingStatus, PaymentStatus } from "@/generated/prisma/enums";
 
 type Role = "owner" | "renter" | "admin";
@@ -34,8 +36,18 @@ export async function PATCH(
     return NextResponse.json({ error: "ไม่พบรายการจอง" }, { status: 404 });
   }
 
-  const body = await req.json();
-  const { status, paymentStatus } = body as {
+  const body = await safeJson(req);
+  if (body === undefined) {
+    return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400 });
+  }
+  const parsedBody = bookingStatusUpdateSchema.safeParse(body);
+  if (!parsedBody.success) {
+    return NextResponse.json(
+      { error: parsedBody.error.issues[0]?.message ?? "ข้อมูลไม่ถูกต้อง" },
+      { status: 400 }
+    );
+  }
+  const { status, paymentStatus } = parsedBody.data as {
     status?: BookingStatus;
     paymentStatus?: PaymentStatus;
   };

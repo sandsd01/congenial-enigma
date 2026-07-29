@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { safeJson } from "@/lib/parse-json";
 
 const registerSchema = z.object({
   name: z.string().min(2).max(100),
@@ -12,7 +13,10 @@ const registerSchema = z.object({
 });
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const body = await safeJson(req);
+  if (body === undefined) {
+    return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400 });
+  }
   const parsed = registerSchema.safeParse(body);
 
   if (!parsed.success) {

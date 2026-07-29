@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { carSchema } from "@/lib/validation";
+import { safeJson } from "@/lib/parse-json";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -9,6 +10,8 @@ export async function GET(req: Request) {
   const q = searchParams.get("q");
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
+  const minPriceNum = minPrice ? Number(minPrice) : NaN;
+  const maxPriceNum = maxPrice ? Number(maxPrice) : NaN;
 
   const cars = await prisma.car.findMany({
     where: {
@@ -24,8 +27,8 @@ export async function GET(req: Request) {
             ],
           }
         : {}),
-      ...(minPrice ? { pricePerDay: { gte: Number(minPrice) } } : {}),
-      ...(maxPrice ? { pricePerDay: { lte: Number(maxPrice) } } : {}),
+      ...(!Number.isNaN(minPriceNum) ? { pricePerDay: { gte: minPriceNum } } : {}),
+      ...(!Number.isNaN(maxPriceNum) ? { pricePerDay: { lte: maxPriceNum } } : {}),
     },
     orderBy: { createdAt: "desc" },
     include: { owner: { select: { name: true } } },
@@ -41,7 +44,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "ไม่มีสิทธิ์เข้าถึง" }, { status: 403 });
   }
 
-  const body = await req.json();
+  const body = await safeJson(req);
+  if (body === undefined) {
+    return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400 });
+  }
   const parsed = carSchema.safeParse(body);
 
   if (!parsed.success) {

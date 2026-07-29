@@ -20,6 +20,8 @@ export const reviewSchema = z.object({
   comment: z.string().max(1000).optional(),
 });
 
+const MAX_BOOKING_DAYS_AHEAD = 730; // 2 years
+
 export const bookingSchema = z
   .object({
     carId: z.string().min(1),
@@ -34,4 +36,25 @@ export const bookingSchema = z
   .refine((data) => data.startDate >= new Date(new Date().toDateString()), {
     message: "วันรับรถต้องไม่ใช่วันที่ผ่านมาแล้ว",
     path: ["startDate"],
-  });
+  })
+  .refine(
+    (data) =>
+      data.startDate.getTime() - Date.now() <=
+      MAX_BOOKING_DAYS_AHEAD * 24 * 60 * 60 * 1000,
+    {
+      message: "วันรับรถต้องไม่เกิน 2 ปีจากวันนี้",
+      path: ["startDate"],
+    }
+  );
+
+export const carModerationSchema = z.object({
+  status: z.enum(["PENDING", "APPROVED", "REJECTED", "SUSPENDED"]),
+  rejectReason: z.string().max(500).optional(),
+});
+
+export const bookingStatusUpdateSchema = z.object({
+  status: z
+    .enum(["PENDING", "CONFIRMED", "REJECTED", "CANCELLED", "COMPLETED"])
+    .optional(),
+  paymentStatus: z.enum(["UNPAID", "PAID", "REFUNDED"]).optional(),
+});
