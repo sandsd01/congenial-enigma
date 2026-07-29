@@ -11,12 +11,14 @@ type CarCardProps = {
   seats: number;
   transmission: string;
   imageUrl: string | null;
+  /** Optional query string (e.g. "?startDate=...&endDate=...") carried through to the detail page. */
+  hrefQuery?: string;
 };
 
 export function CarCard(car: CarCardProps) {
   return (
     <Link
-      href={`/cars/${car.id}`}
+      href={`/cars/${car.id}${car.hrefQuery ?? ""}`}
       className="group overflow-hidden rounded-xl border border-border bg-surface shadow-lg shadow-black/20 transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-xl hover:shadow-black/30"
     >
       <div className="aspect-video w-full overflow-hidden bg-surface-hover">
