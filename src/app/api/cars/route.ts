@@ -40,8 +40,8 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const session = await auth();
 
-  if (!session?.user || session.user.role !== "OWNER") {
-    return NextResponse.json({ error: "ไม่มีสิทธิ์เข้าถึง" }, { status: 403 });
+  if (!session?.user) {
+    return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
   }
 
   const body = await safeJson(req);

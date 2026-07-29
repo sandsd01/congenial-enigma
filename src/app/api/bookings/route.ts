@@ -22,9 +22,6 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "กรุณาเข้าสู่ระบบ" }, { status: 401 });
-  }
 
   const body = await safeJson(req);
   if (body === undefined) {
@@ -39,14 +36,30 @@ export async function POST(req: Request) {
     );
   }
 
-  const { carId, startDate, endDate, notes } = parsed.data;
+  const { carId, startDate, endDate, notes, guestName, guestPhone, guestEmail } =
+    parsed.data;
+
+  if (!session?.user) {
+    if (!guestName || guestName.trim().length < 2) {
+      return NextResponse.json(
+        { error: "กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร" },
+        { status: 400 }
+      );
+    }
+    if (!guestPhone || guestPhone.trim().length < 6) {
+      return NextResponse.json(
+        { error: "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" },
+        { status: 400 }
+      );
+    }
+  }
 
   const car = await prisma.car.findUnique({ where: { id: carId } });
   if (!car || car.status !== "APPROVED" || !car.isActive) {
     return NextResponse.json({ error: "ไม่พบรถที่ต้องการจอง" }, { status: 404 });
   }
 
-  if (car.ownerId === session.user.id) {
+  if (session?.user && car.ownerId === session.user.id) {
     return NextResponse.json(
       { error: "ไม่สามารถจองรถของตัวเองได้" },
       { status: 400 }
@@ -85,7 +98,10 @@ export async function POST(req: Request) {
   const booking = await prisma.booking.create({
     data: {
       carId,
-      renterId: session.user.id,
+      renterId: session?.user?.id,
+      guestName: session?.user ? undefined : guestName,
+      guestPhone: session?.user ? undefined : guestPhone,
+      guestEmail: session?.user ? undefined : guestEmail || undefined,
       startDate,
       endDate,
       days,
