@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { StatusBadge } from "@/components/status-badge";
 import { AdminCarActions } from "@/components/admin-car-actions";
+import { AdminVerificationActions } from "@/components/admin-verification-actions";
 import { CommissionSetting } from "@/components/commission-setting";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 
@@ -16,6 +17,7 @@ export default async function AdminDashboard() {
 
   const [
     pendingCars,
+    pendingVerifications,
     revenueBookings,
     recentBookings,
     carCount,
@@ -26,6 +28,11 @@ export default async function AdminDashboard() {
       where: { status: "PENDING", isActive: true },
       orderBy: { createdAt: "asc" },
       include: { owner: { select: { name: true } } },
+    }),
+    prisma.user.findMany({
+      where: { verificationStatus: "PENDING" },
+      orderBy: { updatedAt: "asc" },
+      select: { id: true, name: true, email: true },
     }),
     prisma.booking.findMany({
       where: { status: { in: ["CONFIRMED", "COMPLETED"] } },
@@ -89,6 +96,27 @@ export default async function AdminDashboard() {
               </p>
             </div>
             <AdminCarActions carId={car.id} />
+          </div>
+        ))}
+      </div>
+
+      <h2 className="mb-4 text-xl font-bold text-ink">
+        คำขอยืนยันตัวตนรอตรวจสอบ ({pendingVerifications.length})
+      </h2>
+      <div className="mb-10 space-y-3">
+        {pendingVerifications.length === 0 && (
+          <p className="text-ink-muted">ไม่มีคำขอยืนยันตัวตนรอตรวจสอบ</p>
+        )}
+        {pendingVerifications.map((user) => (
+          <div
+            key={user.id}
+            className="flex items-center justify-between rounded-xl border border-border bg-surface p-4"
+          >
+            <div>
+              <p className="font-semibold text-ink">{user.name}</p>
+              <p className="text-sm text-ink-muted">{user.email}</p>
+            </div>
+            <AdminVerificationActions userId={user.id} />
           </div>
         ))}
       </div>

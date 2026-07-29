@@ -50,6 +50,12 @@ export function Navbar() {
                   แอดมิน
                 </Link>
               )}
+              <Link
+                href="/verify"
+                className="text-ink-muted transition-colors hover:text-accent"
+              >
+                ยืนยันตัวตน
+              </Link>
               <span className="hidden text-ink-faint sm:inline">
                 {session.user.name}
               </span>

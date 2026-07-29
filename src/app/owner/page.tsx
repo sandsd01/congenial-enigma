@@ -26,7 +26,10 @@ export default async function OwnerDashboard() {
   const bookings = await prisma.booking.findMany({
     where: { car: { ownerId: session.user.id } },
     orderBy: { createdAt: "desc" },
-    include: { car: true, renter: { select: { name: true, phone: true } } },
+    include: {
+      car: true,
+      renter: { select: { name: true, phone: true, verificationStatus: true } },
+    },
     take: 20,
   });
 
@@ -136,7 +139,7 @@ function BookingRow({
   booking: {
     id: string;
     car: { title: string };
-    renter: { name: string; phone: string | null };
+    renter: { name: string; phone: string | null; verificationStatus: string };
     startDate: Date;
     endDate: Date;
     subtotal: number;
@@ -148,7 +151,12 @@ function BookingRow({
     <tr className="border-t border-border text-ink transition-colors hover:bg-surface-hover">
       <td className="px-4 py-2">{booking.car.title}</td>
       <td className="px-4 py-2">
-        {booking.renter.name}
+        <div className="flex items-center gap-1.5">
+          <span>{booking.renter.name}</span>
+          {booking.renter.verificationStatus === "VERIFIED" && (
+            <StatusBadge status="VERIFIED" />
+          )}
+        </div>
         {booking.renter.phone && (
           <div className="text-xs text-ink-faint">
             {booking.renter.phone}

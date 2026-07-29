@@ -12,6 +12,7 @@ const LABELS: Record<string, { text: string; className: string }> = {
     text: "คืนเงินแล้ว",
     className: "bg-surface-raised text-ink-muted",
   },
+  VERIFIED: { text: "ยืนยันตัวตนแล้ว", className: "bg-success-bg text-success" },
 };
 
 export function StatusBadge({ status }: { status: string }) {
