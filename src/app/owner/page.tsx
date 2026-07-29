@@ -101,7 +101,7 @@ export default async function OwnerDashboard() {
 
       <h2 className="mb-4 text-xl font-bold text-ink">คำขอจองล่าสุด</h2>
       <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-border bg-surface-hover text-left text-ink-muted">
             <tr>
               <th className="px-4 py-2">รถ</th>
