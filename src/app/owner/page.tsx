@@ -40,7 +40,7 @@ export default async function OwnerDashboard() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-ink">รถของฉัน</h1>
+        <h1 className="font-display text-2xl font-normal text-ink">รถของฉัน</h1>
         <Link
           href="/owner/cars/new"
           className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
@@ -99,7 +99,7 @@ export default async function OwnerDashboard() {
         ))}
       </div>
 
-      <h2 className="mb-4 text-xl font-bold text-ink">คำขอจองล่าสุด</h2>
+      <h2 className="mb-4 font-display text-xl font-normal text-ink">คำขอจองล่าสุด</h2>
       <div className="overflow-x-auto rounded-xl border border-border bg-surface">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-border bg-surface-hover text-left text-ink-muted">

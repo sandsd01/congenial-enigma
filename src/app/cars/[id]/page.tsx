@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { BookingForm } from "@/components/booking-form";
+import { LogoMark } from "@/components/logo-mark";
 
 export const dynamic = "force-dynamic";
 
@@ -59,13 +60,15 @@ export default async function CarDetailPage({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-6xl">
-                🚗
+              <div className="flex h-full w-full items-center justify-center">
+                <LogoMark className="h-16 w-16 opacity-25" />
               </div>
             )}
           </div>
 
-          <h1 className="mt-6 text-2xl font-bold text-ink">{car.title}</h1>
+          <h1 className="font-display mt-6 text-2xl font-normal text-ink">
+            {car.title}
+          </h1>
           <p className="text-ink-muted">
             {car.brand} {car.model} · {car.year}
           </p>
@@ -135,9 +138,9 @@ export default async function CarDetailPage({
 
         <div className="space-y-4">
           <div className="rounded-xl border border-border bg-surface p-5">
-            <p className="text-2xl font-bold text-accent">
+            <p className="font-display text-2xl text-accent">
               ฿{car.pricePerDay.toLocaleString()}
-              <span className="text-sm font-normal text-ink-muted"> / วัน</span>
+              <span className="font-sans text-sm text-ink-muted"> / วัน</span>
             </p>
           </div>
           <BookingForm

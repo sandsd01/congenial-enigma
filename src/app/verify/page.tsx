@@ -24,7 +24,7 @@ export default async function VerifyPage() {
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-ink">ยืนยันตัวตน</h1>
+        <h1 className="font-display text-2xl font-normal text-ink">ยืนยันตัวตน</h1>
         {user.verificationStatus !== "UNVERIFIED" && (
           <StatusBadge status={user.verificationStatus} />
         )}

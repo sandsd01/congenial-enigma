@@ -57,7 +57,7 @@ export function Navbar() {
         <Link
           href="/"
           onClick={closeMenu}
-          className="flex items-center gap-2 text-lg font-bold text-accent transition-opacity hover:opacity-80"
+          className="font-display flex items-center gap-2 text-lg tracking-wide text-accent transition-opacity hover:opacity-80"
         >
           <LogoMark className="h-7 w-7" />
           RentCar
