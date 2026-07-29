@@ -50,6 +50,7 @@ model User {
   passwordHash             String
   phone                    String?
   role                     Role               @default(RENTER)
+  isSuspended              Boolean            @default(false)
   verificationStatus       VerificationStatus @default(UNVERIFIED)
   verificationRejectReason String?
   createdAt                DateTime           @default(now())
