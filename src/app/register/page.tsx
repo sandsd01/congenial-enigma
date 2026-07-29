@@ -15,7 +15,6 @@ export default function RegisterPage() {
     email: "",
     password: "",
     phone: "",
-    role: "RENTER",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,7 +50,7 @@ export default function RegisterPage() {
       return;
     }
 
-    router.push(form.role === "OWNER" ? "/owner" : "/");
+    router.push("/");
     router.refresh();
   }
 
@@ -106,33 +105,9 @@ export default function RegisterPage() {
               className={inputClass}
             />
           </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-ink-muted">
-              ต้องการสมัครเป็น
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 text-sm text-ink">
-                <input
-                  type="radio"
-                  name="role"
-                  checked={form.role === "RENTER"}
-                  onChange={() => setForm({ ...form, role: "RENTER" })}
-                  className="accent-accent"
-                />
-                ผู้เช่ารถ
-              </label>
-              <label className="flex items-center gap-2 text-sm text-ink">
-                <input
-                  type="radio"
-                  name="role"
-                  checked={form.role === "OWNER"}
-                  onChange={() => setForm({ ...form, role: "OWNER" })}
-                  className="accent-accent"
-                />
-                เจ้าของรถ (ปล่อยเช่า)
-              </label>
-            </div>
-          </div>
+          <p className="text-xs text-ink-faint">
+            เมื่อสมัครแล้ว คุณจะสามารถทั้งเช่ารถและปล่อยเช่ารถของคุณเองได้
+          </p>
           {error && <p className="text-sm text-danger">{error}</p>}
           <button
             type="submit"

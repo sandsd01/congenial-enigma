@@ -21,15 +21,15 @@ function NavLinks({
       <Link href="/cars" onClick={onNavigate} className={linkClassName}>
         ค้นหารถ
       </Link>
-      {session?.user.role === "OWNER" && (
-        <Link href="/owner" onClick={onNavigate} className={linkClassName}>
-          รถของฉัน
-        </Link>
-      )}
-      {session?.user.role === "RENTER" && (
-        <Link href="/bookings" onClick={onNavigate} className={linkClassName}>
-          การจองของฉัน
-        </Link>
+      {session && session.user.role !== "ADMIN" && (
+        <>
+          <Link href="/owner" onClick={onNavigate} className={linkClassName}>
+            รถของฉัน
+          </Link>
+          <Link href="/bookings" onClick={onNavigate} className={linkClassName}>
+            การจองของฉัน
+          </Link>
+        </>
       )}
       {session?.user.role === "ADMIN" && (
         <Link href="/admin" onClick={onNavigate} className={linkClassName}>
@@ -73,7 +73,12 @@ export function Navbar() {
 
           {status === "loading" ? null : session ? (
             <>
-              <span className="text-ink-faint">{session.user.name}</span>
+              <Link
+                href="/account"
+                className="text-ink-faint transition-colors hover:text-accent"
+              >
+                {session.user.name}
+              </Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="rounded-md bg-surface-hover px-3 py-1.5 font-medium text-ink transition-colors hover:bg-surface-raised"
@@ -145,9 +150,13 @@ export function Navbar() {
           <div className="mt-2 border-t border-border pt-2">
             {status === "loading" ? null : session ? (
               <>
-                <p className="px-2 py-1 text-xs text-ink-faint">
+                <Link
+                  href="/account"
+                  onClick={closeMenu}
+                  className="block rounded-md px-2 py-2 text-xs text-ink-faint transition-colors hover:bg-surface-hover hover:text-accent"
+                >
                   {session.user.name}
-                </p>
+                </Link>
                 <button
                   onClick={() => {
                     closeMenu();

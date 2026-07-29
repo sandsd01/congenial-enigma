@@ -4,7 +4,7 @@ import { CarForm } from "@/components/car-form";
 
 export default async function NewCarPage() {
   const session = await auth();
-  if (!session?.user || session.user.role !== "OWNER") {
+  if (!session?.user) {
     redirect("/login?callbackUrl=/owner/cars/new");
   }
 

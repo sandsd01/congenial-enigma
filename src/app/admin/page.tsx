@@ -141,7 +141,12 @@ export default async function AdminDashboard() {
                 className="border-t border-border text-ink transition-colors hover:bg-surface-hover"
               >
                 <td className="px-4 py-2">{b.car.title}</td>
-                <td className="px-4 py-2">{b.renter.name}</td>
+                <td className="px-4 py-2">
+                  {b.renter?.name ?? b.guestName}
+                  {!b.renter && (
+                    <span className="ml-1 text-xs text-ink-faint">(ผู้เยี่ยมชม)</span>
+                  )}
+                </td>
                 <td className="px-4 py-2">฿{b.subtotal.toLocaleString()}</td>
                 <td className="px-4 py-2 text-accent">
                   ฿{b.commissionAmount.toLocaleString()}

@@ -96,8 +96,11 @@ model Booking {
   id               String        @id @default(cuid())
   carId            String
   car              Car           @relation(fields: [carId], references: [id])
-  renterId         String
-  renter           User          @relation("RenterBookings", fields: [renterId], references: [id])
+  renterId         String?
+  renter           User?         @relation("RenterBookings", fields: [renterId], references: [id])
+  guestName        String?
+  guestPhone       String?
+  guestEmail       String?
   startDate        DateTime
   endDate          DateTime
   days             Int

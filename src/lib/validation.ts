@@ -28,6 +28,16 @@ export const bookingSchema = z
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
     notes: z.string().max(500).optional(),
+    guestName: z.string().max(100).optional().or(z.literal("")),
+    guestPhone: z.string().max(20).optional().or(z.literal("")),
+    guestEmail: z
+      .string()
+      .max(200)
+      .optional()
+      .or(z.literal(""))
+      .refine((v) => !v || z.string().email().safeParse(v).success, {
+        message: "อีเมลไม่ถูกต้อง",
+      }),
   })
   .refine((data) => data.endDate > data.startDate, {
     message: "วันคืนรถต้องอยู่หลังวันรับรถ",
@@ -50,6 +60,11 @@ export const bookingSchema = z
 export const carModerationSchema = z.object({
   status: z.enum(["PENDING", "APPROVED", "REJECTED", "SUSPENDED"]),
   rejectReason: z.string().max(500).optional(),
+});
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(6).max(100),
 });
 
 export const bookingStatusUpdateSchema = z.object({

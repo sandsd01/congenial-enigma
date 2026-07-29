@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function OwnerDashboard() {
   const session = await auth();
-  if (!session?.user || session.user.role !== "OWNER") {
+  if (!session?.user) {
     redirect("/login?callbackUrl=/owner");
   }
 
@@ -139,7 +139,13 @@ function BookingRow({
   booking: {
     id: string;
     car: { title: string };
-    renter: { name: string; phone: string | null; verificationStatus: string };
+    renter: {
+      name: string;
+      phone: string | null;
+      verificationStatus: string;
+    } | null;
+    guestName: string | null;
+    guestPhone: string | null;
     startDate: Date;
     endDate: Date;
     subtotal: number;
@@ -147,21 +153,23 @@ function BookingRow({
     status: string;
   };
 }) {
+  const name = booking.renter?.name ?? booking.guestName;
+  const phone = booking.renter?.phone ?? booking.guestPhone;
+
   return (
     <tr className="border-t border-border text-ink transition-colors hover:bg-surface-hover">
       <td className="px-4 py-2">{booking.car.title}</td>
       <td className="px-4 py-2">
         <div className="flex items-center gap-1.5">
-          <span>{booking.renter.name}</span>
-          {booking.renter.verificationStatus === "VERIFIED" && (
+          <span>{name}</span>
+          {booking.renter?.verificationStatus === "VERIFIED" && (
             <StatusBadge status="VERIFIED" />
           )}
+          {!booking.renter && (
+            <span className="text-xs text-ink-faint">(ผู้เยี่ยมชม)</span>
+          )}
         </div>
-        {booking.renter.phone && (
-          <div className="text-xs text-ink-faint">
-            {booking.renter.phone}
-          </div>
-        )}
+        {phone && <div className="text-xs text-ink-faint">{phone}</div>}
       </td>
       <td className="px-4 py-2 whitespace-nowrap">
         {new Date(booking.startDate).toLocaleDateString("th-TH")} -{" "}
