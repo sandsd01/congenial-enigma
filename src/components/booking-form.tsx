@@ -10,15 +10,19 @@ const inputClass =
 export function BookingForm({
   carId,
   pricePerDay,
+  initialStartDate,
+  initialEndDate,
 }: {
   carId: string;
   pricePerDay: number;
+  initialStartDate?: string;
+  initialEndDate?: string;
 }) {
   const { status } = useSession();
   const router = useRouter();
 
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(initialStartDate ?? "");
+  const [endDate, setEndDate] = useState(initialEndDate ?? "");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
