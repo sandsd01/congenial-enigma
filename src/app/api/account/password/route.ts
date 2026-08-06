@@ -28,15 +28,17 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "ไม่พบผู้ใช้" }, { status: 404 });
   }
 
-  const valid = await bcrypt.compare(
-    parsed.data.currentPassword,
-    user.passwordHash
-  );
-  if (!valid) {
-    return NextResponse.json(
-      { error: "รหัสผ่านปัจจุบันไม่ถูกต้อง" },
-      { status: 400 }
+  if (user.passwordHash) {
+    const valid = await bcrypt.compare(
+      parsed.data.currentPassword,
+      user.passwordHash
     );
+    if (!valid) {
+      return NextResponse.json(
+        { error: "รหัสผ่านปัจจุบันไม่ถูกต้อง" },
+        { status: 400 }
+      );
+    }
   }
 
   const passwordHash = await bcrypt.hash(parsed.data.newPassword, 10);

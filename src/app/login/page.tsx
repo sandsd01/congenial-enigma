@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { GoogleSignInButton } from "@/components/google-signin-button";
 
 const inputClass =
   "w-full rounded-md border border-border-strong bg-bg px-3 py-2 text-ink transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
@@ -78,6 +79,12 @@ function LoginForm() {
             {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
           </button>
         </form>
+        <div className="my-4 flex items-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-xs text-ink-faint">หรือ</span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+        <GoogleSignInButton label="เข้าสู่ระบบด้วย Gmail" callbackUrl={callbackUrl} />
         <p className="mt-4 text-sm text-ink-muted">
           ยังไม่มีบัญชี?{" "}
           <Link
